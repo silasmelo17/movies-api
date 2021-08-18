@@ -1,7 +1,7 @@
 
 import express from 'express';
 
-import movieApiController from '@Controllers/api/moviesController/index';
+import movieApiController from '@Controllers/moviesController/index';
 
 import validateQuery from '@Middlewares/validateQuery';
 

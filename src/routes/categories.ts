@@ -1,7 +1,7 @@
 
 import express from 'express';
 
-import categoriesControllerAPI from '@Controllers/api/categoriesController/index';
+import categoriesControllerAPI from '@Controllers/categoriesController/index';
 
 import validateQuery from '@Middlewares/validateQuery';
 

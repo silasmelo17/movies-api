@@ -1,8 +1,8 @@
 
 import express from 'express';
 
-import categories from '@Routes/api/categories';
-import movies from '@Routes/api/movies';
+import categories from '@Routes/categories';
+import movies from '@Routes/movies';
 
 
 
