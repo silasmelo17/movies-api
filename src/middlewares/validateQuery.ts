@@ -1,74 +1,58 @@
 
 import { Request, Response, NextFunction } from 'express';
+import { Query, RequestHandler } from 'express-serve-static-core';
+
+import models from '@Models/index';
 
 
 
-const validateFields = (fields:string | string[] | undefined ): string[] =>
-    fields 
+const validateFields = (query: Query): string[] => {
+    const { fields } = query;
+
+    return fields 
         ? typeof fields === 'string'
-            ? String(fields).split(',')
-            : fields
-        : []
-
-const validatePagination = (limit: number, page: number) => {
-    const limitPossibilities = [ 12, 24, 32 ];
-
-    const correctLimit = limitPossibilities.find( possibility => possibility === limit ) || 12;
-
-    return { 
-        limit: correctLimit, 
-        offset: correctLimit * (page-1)
-    };
+            ? fields.split(',')
+            : fields instanceof Array
+                ? fields.map( value => String(value))
+                : []
+        : [];
 }
 
-const validateAttributes = (fields: string[]): string[] => {
-    const attributes = [ 'id', 'name', 'thumb', 'slug', 'src', 'description', 'duration', 'year' ];
-
+const validateAttributes = (fields: string[], allowedAttributes: string[]): string[] => {
     const arr = fields 
-        ? fields.filter( field => attributes.some( attr => attr === field ))
-        : []
+        ? fields.filter( field => allowedAttributes.some( attr => attr === field ))
+        : [];
 
     return arr.length > 0 
         ? arr
-        : attributes
+        : allowedAttributes;
 }
 
-const includeCategories = (fields: string | string[] | undefined ) =>
-    fields 
-        ? typeof fields === 'string'
-            ? String(fields)
-                .split(',')
-                .some( field => field === 'categories' )
-            : fields.some( field => field === 'categories' )
-        : true
+const validateQuery = (allowedAttributes: string[]): RequestHandler => 
+    async ( req: Request, res: Response, next: NextFunction ) => {
 
+        try {
+            const fields = validateFields( req.query );
+            const attributes = validateAttributes(fields, allowedAttributes);
 
-
-async function validateQuery( req: Request, res: Response, next: NextFunction ) {
-    const limit = Number(req.query.limit) || 12;
-    const page = Number(req.query.page) || 1;
-
-    try {
-        const fields = validateFields( req.query.fields as string | string[] | undefined );
-        const attributes = validateAttributes(fields);
-        const pagination = validatePagination(limit,page);
-        const include = includeCategories( req.query.fields as string | string[] | undefined );
-
-        res.locals = {
-            ...res.locals,
-            fields,
-            attributes,
-            page,
-            include,
-            ...pagination
-        };
-    
-        return next();
-    } catch(err) {
-        return res.status(503).json(err);
+            res.locals = {
+                ...res.locals,
+                fields,
+                attributes
+            };
+        
+            return next();
+        } catch(err) {
+            return res.status(503).json(err);
+        }
     }
-}
 
 
 
-export default validateQuery;
+const moviesAttributes = Object.keys(models.Movie.rawAttributes);
+const categoryAttributes = Object.keys(models.Category.rawAttributes);
+const midiaAttributes = Object.keys(models.Midia.rawAttributes);
+
+export const validateMovieQuery = validateQuery(moviesAttributes);
+export const validateCategoryQuery = validateQuery(categoryAttributes);
+export const validateMidiaQuery = validateQuery(midiaAttributes);

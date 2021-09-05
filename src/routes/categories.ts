@@ -3,14 +3,16 @@ import express from 'express';
 
 import categoriesControllerAPI from '@Controllers/categoriesController/index';
 
-import validateQuery from '@Middlewares/validateQuery';
+import { validateCategoryQuery, validateMovieQuery } from '@Middlewares/validateQuery';
+import validatePagination from '@Middlewares/validatePagination';
+
 
 
 
 const router = express.Router();
 
-router.get( '/api/categories', categoriesControllerAPI.findAll );
-router.get( '/api/category/:id', validateQuery, categoriesControllerAPI.findByCategory );
+router.get( '/categories', validatePagination, validateCategoryQuery, categoriesControllerAPI.findAll );
+router.get( '/category/:id', validatePagination, validateMovieQuery, categoriesControllerAPI.findByCategory );
 
 
 

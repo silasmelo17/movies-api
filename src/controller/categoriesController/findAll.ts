@@ -5,8 +5,12 @@ import models from '@Models/index';
 
 
 async function findAll (req: Request, res: Response ) {
+    const { attributes } = res.locals;
+
     try {
-        const result = await models.Category.findAll();
+        const result = await models.Category.findAll({
+            attributes
+        });
 
         return res.status(200).json(result);
     }catch(err) {

@@ -1,5 +1,7 @@
 'use strict';
 
+
+
 async function up(queryInterface, Sequelize) {
     await queryInterface.createTable( "Movies_Categories", {
         id: {
@@ -28,6 +30,7 @@ async function up(queryInterface, Sequelize) {
 async function down(queryInterface, Sequelize) {
     await queryInterface.dropTable( "Movies_Categories" );
 }
+
 
 
 module.exports = {

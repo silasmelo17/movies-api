@@ -3,16 +3,17 @@ import express from 'express';
 
 import movieApiController from '@Controllers/moviesController/index';
 
-import validateQuery from '@Middlewares/validateQuery';
+import { validateMovieQuery } from '@Middlewares/validateQuery';
+import validatePagination from '@Middlewares/validatePagination';
 
 
 
 const router = express.Router();
 
-router.get( '/api/movies', validateQuery, movieApiController.findAll );
-router.get( '/api/movies/:slug', movieApiController.findOne );
+router.get( '/movies', validatePagination, validateMovieQuery, movieApiController.findAll );
+router.get( '/movies/:slug', movieApiController.findOne );
 
-router.post( '/api/movies', movieApiController.create );
+router.post( '/movies', movieApiController.create );
 
 
 

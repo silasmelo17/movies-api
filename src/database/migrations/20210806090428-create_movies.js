@@ -2,7 +2,7 @@
 
 
 async function up(queryInterface, Sequelize) {
-    return queryInterface.createTable( 'Movies', {
+    return await queryInterface.createTable( 'Movies', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -50,7 +50,7 @@ async function up(queryInterface, Sequelize) {
 }
 
 async function down(queryInterface, Sequelize) {
-    return queryInterface.dropTable( 'Movies' );
+    return await queryInterface.dropTable( 'Movies' );
 }
 
 

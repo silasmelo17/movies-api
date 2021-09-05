@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use(routes);
+app.use( '/api', routes);
 
 //Listen Server
 const PORT = process.env.PORT || 8080;
